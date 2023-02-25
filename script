@@ -1,0 +1,11 @@
+#!/bin/bash
+log=$(df /mnt/sdb1/LOG --output=pcent | tr -d '%' | tr -d 'Использовано')
+limit=70
+DAT=$(date +%d_%m_%Y)
+if (("$log" > "$limit"))
+then
+  tar cfvz /mnt/sdb2/BACKUP/backup_"$DAT".tar.gz --directory=/mnt/sdb1/LOG log
+  #rm -rf /mnt/sdb1/LOG/*
+else
+echo "The free space limit in the LOG folder has not been exceeded"
+fi
