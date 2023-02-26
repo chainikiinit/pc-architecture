@@ -5,7 +5,7 @@ DAT=$(date +%d_%m_%Y)
 if (("$log" > "$limit"))
 then
   tar cfvz /mnt/sdb2/BACKUP/backup_"$DAT".tar.gz --directory=/mnt/sdb1/LOG log
-  #rm -rf /mnt/sdb1/LOG/*
+  rm -rf /mnt/sdb1/LOG/*
 else
 echo "The free space limit in the LOG folder has not been exceeded"
 fi
