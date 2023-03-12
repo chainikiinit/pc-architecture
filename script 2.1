@@ -1,0 +1,34 @@
+#!/bin/bash
+log=$(df /mnt/sdb1/LOG --output=pcent | tr -d '%' | tr -d 'Использовано')
+limit=70
+count=$(ls | wc -l)
+#echo $count
+n=1
+DAT=$(date +%d_%m_%Y)
+if ! [ -d /mnt/sdb1/log/ ];
+  then
+  echo "No directory log"
+else
+  if ! [ -d /mnt/sdb2/BACKUP/ ];
+    then
+    echo "No directory BACKUP"
+  else
+    if (("$log" > "$limit"))
+      then 
+      cd /mnt/sdb1/LOG
+      ls --sort=time | tail -n "$n" | while read d; do mv $d /mnt/sdb1/log/; done
+      tar cfvz /mnt/sdb2/BACKUP/backup_"$DAT".tar.gz --directory=/mnt/sdb1/ log 
+      rm -rf /mnt/sdb1/log/*
+    else
+      echo "The free space limit in the LOG folder has not been exceeded"
+    fi
+  fi
+fi
+
+count1=$(ls | wc -l)
+if (("$count" - "$n" != "$count1"))
+  then
+  echo "000"
+  else
+  echo "$n" 
+fi
